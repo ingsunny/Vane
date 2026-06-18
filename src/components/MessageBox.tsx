@@ -18,6 +18,7 @@ import Rewrite from './MessageActions/Rewrite';
 import MessageSources from './MessageSources';
 import SearchImages from './SearchImages';
 import SearchVideos from './SearchVideos';
+import SearchEngineResults from './SearchEngineResults';
 import { useSpeech } from 'react-text-to-speech';
 import ThinkBox from './ThinkBox';
 import { useChat, Section } from '@/lib/hooks/useChat';
@@ -280,6 +281,7 @@ const MessageBox = ({
               query={section.message.query}
               messageId={section.message.messageId}
             />
+            <SearchEngineResults blocks={section.message.responseBlocks} />
           </div>
         )}
       </div>

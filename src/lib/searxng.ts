@@ -16,6 +16,10 @@ interface SearxngSearchResult {
   content?: string;
   author?: string;
   iframe_src?: string;
+  /** The primary engine that returned this result. */
+  engine?: string;
+  /** All engines that returned this result. */
+  engines?: string[];
 }
 
 export const searchSearxng = async (

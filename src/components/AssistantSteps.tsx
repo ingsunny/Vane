@@ -178,37 +178,88 @@ const AssistantSteps = ({
                       {(step.type === 'search_results' ||
                         step.type === 'reading') &&
                         step.reading.length > 0 && (
-                          <div className="flex flex-wrap gap-1.5 mt-1.5">
-                            {step.reading.slice(0, 4).map((result, idx) => {
-                              const url = result.metadata.url || '';
-                              const title = result.metadata.title || 'Untitled';
-                              const domain = url ? new URL(url).hostname : '';
-                              const faviconUrl = domain
-                                ? `https://s2.googleusercontent.com/s2/favicons?domain=${domain}&sz=128`
-                                : '';
+                          <>
+                            {(() => {
+                              const stepEngines = Array.from(
+                                new Set(
+                                  step.reading.flatMap(
+                                    (r) =>
+                                      (r.metadata?.engines as
+                                        | string[]
+                                        | undefined) || [],
+                                  ),
+                                ),
+                              );
+
+                              if (stepEngines.length === 0) return null;
 
                               return (
-                                <a
-                                  key={idx}
-                                  href={url}
-                                  target="_blank"
-                                  className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-xs font-medium bg-light-100 dark:bg-dark-100 text-black/70 dark:text-white/70 border border-light-200 dark:border-dark-200"
-                                >
-                                  {faviconUrl && (
-                                    <img
-                                      src={faviconUrl}
-                                      alt=""
-                                      className="w-3 h-3 rounded-sm flex-shrink-0"
-                                      onError={(e) => {
-                                        e.currentTarget.style.display = 'none';
-                                      }}
-                                    />
-                                  )}
-                                  <span className="line-clamp-1">{title}</span>
-                                </a>
+                                <div className="flex flex-wrap items-center gap-1 mt-1.5">
+                                  <span className="text-[11px] text-black/40 dark:text-white/40">
+                                    via
+                                  </span>
+                                  {stepEngines.map((engine) => (
+                                    <span
+                                      key={engine}
+                                      className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium capitalize bg-sky-500/10 text-sky-600 dark:text-sky-400 border border-sky-500/20"
+                                    >
+                                      {engine}
+                                    </span>
+                                  ))}
+                                </div>
                               );
-                            })}
-                          </div>
+                            })()}
+
+                            <div className="flex flex-wrap gap-1.5 mt-1.5">
+                              {step.reading.slice(0, 4).map((result, idx) => {
+                                const url = result.metadata.url || '';
+                                const title =
+                                  result.metadata.title || 'Untitled';
+                                const domain = url ? new URL(url).hostname : '';
+                                const faviconUrl = domain
+                                  ? `https://s2.googleusercontent.com/s2/favicons?domain=${domain}&sz=128`
+                                  : '';
+                                const engines =
+                                  (result.metadata?.engines as
+                                    | string[]
+                                    | undefined) || [];
+
+                                return (
+                                  <a
+                                    key={idx}
+                                    href={url}
+                                    target="_blank"
+                                    title={
+                                      engines.length > 0
+                                        ? `Found via ${engines.join(', ')}`
+                                        : title
+                                    }
+                                    className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-xs font-medium bg-light-100 dark:bg-dark-100 text-black/70 dark:text-white/70 border border-light-200 dark:border-dark-200"
+                                  >
+                                    {faviconUrl && (
+                                      <img
+                                        src={faviconUrl}
+                                        alt=""
+                                        className="w-3 h-3 rounded-sm flex-shrink-0"
+                                        onError={(e) => {
+                                          e.currentTarget.style.display = 'none';
+                                        }}
+                                      />
+                                    )}
+                                    <span className="line-clamp-1">{title}</span>
+                                    {engines.length > 0 && (
+                                      <span className="text-[10px] text-sky-600 dark:text-sky-400 capitalize flex-shrink-0">
+                                        · {engines[0]}
+                                        {engines.length > 1
+                                          ? ` +${engines.length - 1}`
+                                          : ''}
+                                      </span>
+                                    )}
+                                  </a>
+                                );
+                              })}
+                            </div>
+                          </>
                         )}
 
                       {step.type === 'upload_searching' &&

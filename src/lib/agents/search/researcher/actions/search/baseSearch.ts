@@ -9,6 +9,18 @@ import z from 'zod';
 import Scraper from '@/lib/scraper';
 import { splitText } from '@/lib/utils/splitText';
 
+/**
+ * Normalize the search engine(s) that returned a SearXNG result. Prefers the
+ * full `engines` list, falling back to the single `engine` field. Used to show
+ * the user which engines a source came from.
+ */
+const getEngines = (r: { engine?: string; engines?: string[] }): string[] => {
+  if (Array.isArray(r.engines) && r.engines.length > 0) {
+    return Array.from(new Set(r.engines.filter(Boolean)));
+  }
+  return r.engine ? [r.engine] : [];
+};
+
 export const executeSearch = async (input: {
   queries: string[];
   mode: SearchAgentConfig['mode'];
@@ -63,6 +75,7 @@ export const executeSearch = async (input: {
                 metadata: {
                   title: r.title,
                   url: r.url,
+                  engines: getEngines(r),
                   similarity: computeSimilarity(queryEmbedding, chunkEmbedding),
                   embedding: chunkEmbedding,
                 },
@@ -79,6 +92,7 @@ export const executeSearch = async (input: {
             metadata: {
               title: r.title,
               url: r.url,
+              engines: getEngines(r),
               similarity: 1,
               embedding: [],
             },
@@ -190,6 +204,7 @@ export const executeSearch = async (input: {
           metadata: {
             title: r.title,
             url: r.url,
+            engines: getEngines(r),
             similarity: 1,
             embedding: [],
           },

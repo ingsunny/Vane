@@ -72,6 +72,6 @@ RUN echo "searxng ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 
 EXPOSE 3000 8080
 
-ENV SEARXNG_API_URL=http://localhost:8080
+ENV SEARXNG_API_URL=https://search.appmontize.co.in/
 
 CMD ["/home/vane/entrypoint.sh"]

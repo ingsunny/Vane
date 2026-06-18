@@ -11,7 +11,7 @@ sleep 5
 
 COUNTER=0
 MAX_TRIES=30
-until curl -s http://localhost:8080 > /dev/null 2>&1; do
+until curl -s https://search.appmontize.co.in/ > /dev/null 2>&1; do
   COUNTER=$((COUNTER+1))
   if [ $COUNTER -ge $MAX_TRIES ]; then
     echo "Warning: SearXNG health check timeout, but continuing..."
@@ -20,7 +20,7 @@ until curl -s http://localhost:8080 > /dev/null 2>&1; do
   sleep 1
 done
 
-if curl -s http://localhost:8080 > /dev/null 2>&1; then
+if curl -s https://search.appmontize.co.in/ > /dev/null 2>&1; then
   echo "SearXNG started successfully (PID: $SEARXNG_PID)"
 else
   echo "SearXNG may not be fully ready, but continuing (PID: $SEARXNG_PID)"
