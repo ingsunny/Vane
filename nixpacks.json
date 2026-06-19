@@ -1,0 +1,7 @@
+{
+  "phases": {
+    "build": {
+      "cacheDirectories": [".next/cache", "node_modules/.cache"]
+    }
+  }
+}
